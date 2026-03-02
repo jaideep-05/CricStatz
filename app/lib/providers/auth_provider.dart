@@ -20,19 +20,22 @@ class AuthProvider extends ChangeNotifier {
   bool get isProfileComplete => _profile != null;
 
   void _init() {
-    _authSub = SupabaseService.onAuthStateChange.listen((authState) async {
-      final event = authState.event;
-      if (event == AuthChangeEvent.signedIn ||
-          event == AuthChangeEvent.tokenRefreshed) {
-        await _loadProfile();
-      } else if (event == AuthChangeEvent.signedOut) {
-        _profile = null;
-        _isLoading = false;
-        notifyListeners();
-      }
-    });
+    final authStream = SupabaseService.onAuthStateChange;
+    if (authStream != null) {
+      _authSub = authStream.listen((authState) async {
+        final event = authState.event;
+        if (event == AuthChangeEvent.signedIn ||
+            event == AuthChangeEvent.tokenRefreshed) {
+          await _loadProfile();
+        } else if (event == AuthChangeEvent.signedOut) {
+          _profile = null;
+          _isLoading = false;
+          notifyListeners();
+        }
+      });
+    }
 
-    // Check if already signed in
+    // Check if already signed in (only if client is available).
     if (SupabaseService.currentUser != null) {
       _loadProfile();
     } else {

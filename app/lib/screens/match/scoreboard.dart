@@ -161,7 +161,8 @@ class _Tabs extends StatelessWidget {
                     if (i == 0) {
                       Navigator.pushNamed(context, AppRoutes.info);
                     } else if (i == 1) {
-                      Navigator.pushNamed(context, AppRoutes.live);
+                      Navigator.pushNamed(
+                          context, AppRoutes.matchDetailsLive);
                     } else if (i == 2) {
                       // Already on scorecard (this screen).
                     } else if (i == 3) {
@@ -173,8 +174,9 @@ class _Tabs extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color:
-                              isSelected ? AppPalette.accent : Colors.transparent,
+                          color: isSelected
+                              ? AppPalette.accent
+                              : Colors.transparent,
                           width: 2,
                         ),
                       ),
@@ -315,18 +317,20 @@ class _BattingTable extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppPalette.textPrimary,
-                                fontWeight: FontWeight.w700,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: AppPalette.textPrimary,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           dismissal,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppPalette.textMuted,
-                                fontSize: 10,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: AppPalette.textMuted,
+                                    fontSize: 10,
+                                  ),
                         ),
                       ],
                     ),
@@ -355,11 +359,14 @@ class _BattingTable extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 9),
             decoration: const BoxDecoration(
               color: MatchScoreboardScreen._headerOverlay,
-              border: Border(bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
+              border: Border(
+                  bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
             ),
             child: Row(
               children: [
-                Expanded(flex: 5, child: headerCell('BATTER', align: TextAlign.left)),
+                Expanded(
+                    flex: 5,
+                    child: headerCell('BATTER', align: TextAlign.left)),
                 Expanded(child: headerCell('R')),
                 Expanded(child: headerCell('B')),
                 Expanded(child: headerCell('4S')),
@@ -404,7 +411,8 @@ class _BattingTable extends StatelessWidget {
     );
   }
 
-  Widget _num(BuildContext context, String v, {bool bold = false, bool muted = false}) {
+  Widget _num(BuildContext context, String v,
+      {bool bold = false, bool muted = false}) {
     return Text(
       v,
       textAlign: TextAlign.center,
@@ -598,7 +606,8 @@ class _BowlingTable extends StatelessWidget {
               ),
         );
 
-    Widget row(String name, String o, String m, String r, String w, String eco) {
+    Widget row(
+        String name, String o, String m, String r, String w, String eco) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: const BoxDecoration(
@@ -639,7 +648,8 @@ class _BowlingTable extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 9, 16, 9),
             decoration: const BoxDecoration(
               color: MatchScoreboardScreen._headerOverlay,
-              border: Border(bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
+              border: Border(
+                  bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
             ),
             child: Row(
               children: [
@@ -938,18 +948,20 @@ class _AustraliaBattingTable extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppPalette.textPrimary,
-                                fontWeight: FontWeight.w700,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: AppPalette.textPrimary,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           dismissal,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppPalette.textMuted,
-                                fontSize: 10,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: AppPalette.textMuted,
+                                    fontSize: 10,
+                                  ),
                         ),
                       ],
                     ),
@@ -978,11 +990,14 @@ class _AustraliaBattingTable extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 9),
             decoration: const BoxDecoration(
               color: MatchScoreboardScreen._headerOverlay,
-              border: Border(bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
+              border: Border(
+                  bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
             ),
             child: Row(
               children: [
-                Expanded(flex: 5, child: headerCell('BATTER', align: TextAlign.left)),
+                Expanded(
+                    flex: 5,
+                    child: headerCell('BATTER', align: TextAlign.left)),
                 Expanded(child: headerCell('R')),
                 Expanded(child: headerCell('B')),
                 Expanded(child: headerCell('4S')),
@@ -1011,7 +1026,8 @@ class _AustraliaBattingTable extends StatelessWidget {
     );
   }
 
-  Widget _num(BuildContext context, String v, {bool bold = false, bool muted = false}) {
+  Widget _num(BuildContext context, String v,
+      {bool bold = false, bool muted = false}) {
     return Text(
       v,
       textAlign: TextAlign.center,
@@ -1128,7 +1144,8 @@ class _AustraliaBowlingTable extends StatelessWidget {
               ),
         );
 
-    Widget row(String name, String o, String m, String r, String w, String eco) {
+    Widget row(
+        String name, String o, String m, String r, String w, String eco) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: const BoxDecoration(
@@ -1169,7 +1186,8 @@ class _AustraliaBowlingTable extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 9, 16, 9),
             decoration: const BoxDecoration(
               color: MatchScoreboardScreen._headerOverlay,
-              border: Border(bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
+              border: Border(
+                  bottom: BorderSide(color: MatchScoreboardScreen._stroke)),
             ),
             child: Row(
               children: [
@@ -1204,4 +1222,3 @@ class _AustraliaBowlingTable extends StatelessWidget {
     );
   }
 }
-

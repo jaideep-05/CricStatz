@@ -1,11 +1,16 @@
 import 'dart:ui';
 
 import 'package:cricstatz/config/palette.dart';
-import 'package:cricstatz/config/routes.dart';
 import 'package:flutter/material.dart';
 
-class MatchLiveScreen extends StatelessWidget {
-  const MatchLiveScreen({super.key});
+const Color _chipBorder = Color(0x1AFFFFFF);
+
+/// Live match details page (Figma 141:2108).
+class MatchDetailsLiveScreen extends StatelessWidget {
+  const MatchDetailsLiveScreen({super.key});
+
+  static const Color _cardBg = Color(0xFF111827);
+  static const Color _muted40 = Color(0x66FFFFFF);
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +26,15 @@ class MatchLiveScreen extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
                 child: Column(
                   children: [
-                    _ScoreBannerCard(),
+                    _buildScoreBanner(context),
                     const SizedBox(height: 16),
-                    _CurrentPartnershipCard(),
+                    _buildPartnershipCard(context),
                     const SizedBox(height: 16),
-                    _BatsmenRow(),
+                    _buildBatsmenRow(context),
                     const SizedBox(height: 16),
-                    _BowlerCard(),
+                    _buildBowlerCard(context),
                     const SizedBox(height: 16),
-                    _RecentBallsRow(),
+                    _buildRecentBalls(context),
                   ],
                 ),
               ),
@@ -114,40 +119,28 @@ class MatchLiveScreen extends StatelessWidget {
             children: List.generate(tabs.length, (i) {
               final isSelected = i == selectedIndex;
               return Expanded(
-                child: InkWell(
-                  onTap: () {
-                    if (i == selectedIndex) return;
-                    if (i == 0) {
-                      Navigator.pushNamed(context, AppRoutes.info);
-                    } else if (i == 2) {
-                      Navigator.pushNamed(context, AppRoutes.scoreboard);
-                    } else if (i == 3) {
-                      Navigator.pushNamed(context, AppRoutes.players);
-                    }
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color:
-                              isSelected ? AppPalette.accent : Colors.transparent,
-                          width: 2,
-                        ),
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color:
+                            isSelected ? AppPalette.accent : Colors.transparent,
+                        width: 2,
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Text(
-                      tabs[i],
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: isSelected
-                                ? AppPalette.accent
-                                : AppPalette.textMuted,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
-                            letterSpacing: 0.6,
-                          ),
-                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Text(
+                    tabs[i],
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: isSelected
+                              ? AppPalette.accent
+                              : AppPalette.textMuted,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                          letterSpacing: 0.6,
+                        ),
                   ),
                 ),
               );
@@ -157,11 +150,8 @@ class MatchLiveScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class _ScoreBannerCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildScoreBanner(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -188,7 +178,7 @@ class _ScoreBannerCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 150,
+                  width: 140,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -203,7 +193,10 @@ class _ScoreBannerCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         '284/4',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 36,
@@ -212,7 +205,10 @@ class _ScoreBannerCard extends StatelessWidget {
                       const SizedBox(height: 6),
                       Text(
                         'Overs: 42.3 •\nCRR: 6.68',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(
                               color: const Color(0xCCFFFFFF),
                               fontWeight: FontWeight.w500,
                               height: 1.4,
@@ -228,8 +224,8 @@ class _ScoreBannerCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Container(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: const Color(0xFFDC2626),
                           borderRadius: BorderRadius.circular(999),
@@ -263,15 +259,19 @@ class _ScoreBannerCard extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         'Target: 320',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: const Color(0x99FFFFFF),
-                            ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: _muted40),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'India needs 36 runs in\n45 balls',
                         textAlign: TextAlign.right,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
                               height: 1.4,
@@ -292,10 +292,11 @@ class _ScoreBannerCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'AUSTRALIA (1ST INNINGS)',
+                        'AUSTRALIA (1ST\nINNINGS)',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: const Color(0x99FFFFFF),
+                              color: _muted40,
                               fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
                             ),
                       ),
                       const SizedBox(height: 4),
@@ -318,8 +319,9 @@ class _ScoreBannerCard extends StatelessWidget {
                       Text(
                         'REQUIRED RATE',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: const Color(0x99FFFFFF),
+                              color: _muted40,
                               fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
                             ),
                       ),
                       const SizedBox(height: 4),
@@ -328,6 +330,7 @@ class _ScoreBannerCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                               color: AppPalette.accent,
                               fontWeight: FontWeight.w700,
+                              fontSize: 16,
                             ),
                       ),
                     ],
@@ -340,16 +343,13 @@ class _ScoreBannerCard extends StatelessWidget {
       ),
     );
   }
-}
 
-class _CurrentPartnershipCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPartnershipCard(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
-        color: Color(0xFF111827),
+        color: _cardBg,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0x0DFFFFFF)),
       ),
@@ -390,12 +390,9 @@ class _CurrentPartnershipCard extends StatelessWidget {
       ),
     );
   }
-}
 
-class _BatsmenRow extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Widget batterCard({
+  Widget _buildBatsmenRow(BuildContext context) {
+    Widget card({
       required bool active,
       required String name,
       required String runs,
@@ -408,7 +405,7 @@ class _BatsmenRow extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.fromLTRB(active ? 20 : 17, 16, 16, 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF111827),
+            color: _cardBg,
             borderRadius: BorderRadius.circular(12),
             border: active
                 ? const Border(
@@ -437,8 +434,9 @@ class _BatsmenRow extends StatelessWidget {
                   Text(
                     name,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color:
-                              active ? Colors.white : const Color(0xFFCBD5E1),
+                          color: active
+                              ? Colors.white
+                              : const Color(0xFFCBD5E1),
                           fontWeight: FontWeight.w700,
                         ),
                   ),
@@ -485,7 +483,7 @@ class _BatsmenRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        batterCard(
+        card(
           active: true,
           name: 'V. Kohli*',
           runs: '82',
@@ -495,7 +493,7 @@ class _BatsmenRow extends StatelessWidget {
           sr: '151.8',
         ),
         const SizedBox(width: 16),
-        batterCard(
+        card(
           active: false,
           name: 'KL Rahul',
           runs: '14',
@@ -507,16 +505,13 @@ class _BatsmenRow extends StatelessWidget {
       ],
     );
   }
-}
 
-class _BowlerCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildBowlerCard(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
-        color: Color(0xFF111827),
+        color: _cardBg,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0x0DFFFFFF)),
       ),
@@ -585,40 +580,10 @@ class _BowlerCard extends StatelessWidget {
       ),
     );
   }
-}
 
-class _MiniBallChip extends StatelessWidget {
-  const _MiniBallChip(this.value);
-
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 20,
-      height: 20,
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E293B),
-        shape: BoxShape.circle,
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        value,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Colors.white,
-              fontSize: 10,
-            ),
-      ),
-    );
-  }
-}
-
-class _RecentBallsRow extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildRecentBalls(BuildContext context) {
     final over42 = ['1', '2', '0', '1', '4', 'W', '0', '1'];
     final over41 = ['0', '1lb', '6', '1', '1', '2'];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -657,11 +622,11 @@ class _RecentBallsRow extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              _OverChip(label: 'Ov 42', balls: over42),
+              _OverBallsTile(overLabel: 'Ov 42', balls: over42),
               const SizedBox(width: 12),
               Opacity(
                 opacity: 0.6,
-                child: _OverChip(label: 'Ov 41', balls: over41),
+                child: _OverBallsTile(overLabel: 'Ov 41', balls: over41),
               ),
             ],
           ),
@@ -671,15 +636,42 @@ class _RecentBallsRow extends StatelessWidget {
   }
 }
 
-class _OverChip extends StatelessWidget {
-  const _OverChip({required this.label, required this.balls});
+class _MiniBallChip extends StatelessWidget {
+  const _MiniBallChip(this.value);
 
-  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 20,
+      height: 20,
+      decoration: const BoxDecoration(
+        color: AppPalette.cardStroke,
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        value,
+        style: Theme.of(context)
+            .textTheme
+            .labelSmall
+            ?.copyWith(color: Colors.white, fontSize: 10),
+      ),
+    );
+  }
+}
+
+class _OverBallsTile extends StatelessWidget {
+  const _OverBallsTile({required this.overLabel, required this.balls});
+
+  final String overLabel;
   final List<String> balls;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 56,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: const Color(0x0DFFFFFF),
@@ -691,7 +683,7 @@ class _OverChip extends StatelessWidget {
           RotatedBox(
             quarterTurns: -1,
             child: Text(
-              label,
+              overLabel,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: AppPalette.textSubtle,
                     fontWeight: FontWeight.w700,
@@ -716,9 +708,9 @@ class _BallChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color bg = const Color(0xFF1E293B);
+    Color bg = AppPalette.cardStroke;
     Color fg = Colors.white;
-    BoxBorder? border = Border.all(color: const Color(0x1AFFFFFF));
+    BoxBorder? border = Border.all(color: _chipBorder);
 
     if (value == '4' || value == '6') {
       bg = AppPalette.accent;
