@@ -132,8 +132,9 @@ class UpcomingFixturesScreen extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.calendar_today_outlined,
-                            color: AppPalette.textPrimary, size: 20),
+                        icon: Image.asset(AppAssets.iconCal,
+                            width: 20, height: 20,
+                            color: AppPalette.textPrimary),
                         padding: EdgeInsets.zero,
                         style: IconButton.styleFrom(
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -150,8 +151,9 @@ class UpcomingFixturesScreen extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.filter_list,
-                            color: AppPalette.textPrimary, size: 20),
+                        icon: Image.asset(AppAssets.iconFil,
+                            width: 20, height: 20,
+                            color: AppPalette.textPrimary),
                         padding: EdgeInsets.zero,
                         style: IconButton.styleFrom(
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -190,7 +192,8 @@ class _QuickTabs extends StatelessWidget {
           _TabItem(
               label: 'Results',
               isSelected: false,
-              onTap: () => Navigator.push(context, AppRoutes.buildResultsRoute())),
+              onTap: () =>
+                  Navigator.push(context, AppRoutes.buildResultsRoute())),
           _TabItem(label: "My Matche's", isSelected: false, onTap: () {}),
         ],
       ),
@@ -288,8 +291,9 @@ class _FixtureCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.calendar_today_outlined,
-                        size: 14, color: AppPalette.textMuted),
+                    Image.asset(AppAssets.iconCal,
+                        width: 14, height: 14,
+                        color: AppPalette.textMuted),
                     const SizedBox(width: 8),
                     Text(
                       data.time.toUpperCase(),
@@ -411,10 +415,16 @@ class _FixtureCard extends StatelessWidget {
                               ? Icons.play_arrow
                               : Icons.notifications_outlined,
                           size: data.hasStartMatch ? 14 : 16,
+                          color: data.hasStartMatch
+                              ? AppPalette.bgSecondary
+                              : AppPalette.accent,
                         ),
-                        label: Text(data.hasStartMatch
-                            ? 'Start Match'
-                            : 'Set Reminder'),
+                        label: Text(
+                          data.hasStartMatch
+                              ? 'Start Match'
+                              : 'Set Reminder',
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
                         style: FilledButton.styleFrom(
                           backgroundColor: data.hasStartMatch
                               ? AppPalette.accent
@@ -430,12 +440,13 @@ class _FixtureCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () =>
+                          Navigator.pushNamed(context, AppRoutes.info),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppPalette.textPrimary,
                         side: const BorderSide(color: Color(0xFF2D3748)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 17, vertical: 14),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        minimumSize: const Size(0, 40),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                       ),

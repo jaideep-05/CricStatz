@@ -1,0 +1,711 @@
+import 'dart:ui';
+
+import 'package:cricstatz/config/palette.dart';
+import 'package:cricstatz/config/routes.dart';
+import 'package:flutter/material.dart';
+
+class MatchInfoScreen extends StatelessWidget {
+  const MatchInfoScreen({super.key});
+
+  // Figma (141:1928) image assets (valid for limited time).
+  static const _stadiumImg =
+      'https://www.figma.com/api/mcp/asset/33423223-3ca2-4619-8967-429d142aa978';
+  static const _mapImg =
+      'https://www.figma.com/api/mcp/asset/1184f189-9712-439b-aa09-96ecbd7b36be';
+  static const _indFlag =
+      'https://www.figma.com/api/mcp/asset/7820bf67-988e-47a5-bd50-3578c658f8e3';
+  static const _ausFlag =
+      'https://www.figma.com/api/mcp/asset/f4b32dcb-4957-466f-b827-2688b91170b1';
+
+  static const Color _cardBg = Color(0xFF0F172A);
+  static const Color _cardBorder = Color(0xFF1E293B);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: DecoratedBox(
+        decoration: const BoxDecoration(gradient: AppPalette.surfaceGradient),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(context),
+              _buildTabs(context),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                  child: Column(
+                    children: [
+                      _buildMatchSummaryCard(context),
+                      const SizedBox(height: 16),
+                      _buildVenueDetailsCard(context),
+                      const SizedBox(height: 16),
+                      _buildWeatherPitchRow(context),
+                      const SizedBox(height: 16),
+                      _buildHeadToHeadCard(context),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: Container(
+          height: 72,
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          decoration: const BoxDecoration(
+            color: Color(0xF20A1F43),
+            border: Border(bottom: BorderSide(color: Color(0x1AFFFFFF))),
+          ),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back_ios_new,
+                    color: AppPalette.textPrimary, size: 20),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'IND vs AUS, Final',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppPalette.textPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'ODI World Cup 2023',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFFCBD5E1),
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.share_outlined,
+                    color: AppPalette.textPrimary, size: 20),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabs(BuildContext context) {
+    const tabs = ['INFO', 'LIVE', 'SCORECARD', 'PLAYERS'];
+    const selectedIndex = 0;
+
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: Container(
+          height: 51,
+          decoration: const BoxDecoration(
+            color: Color(0xF20A1F43),
+            border: Border(bottom: BorderSide(color: Color(0x1AFFFFFF))),
+          ),
+          child: Row(
+            children: List.generate(tabs.length, (i) {
+              final isSelected = i == selectedIndex;
+              return Expanded(
+                child: InkWell(
+                  onTap: () {
+                    // Live screen removed for now.
+                    if (i == 2) {
+                      Navigator.pushNamed(context, AppRoutes.scoreboard);
+                    }
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color:
+                              isSelected ? AppPalette.accent : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Text(
+                      tabs[i],
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: isSelected
+                                ? AppPalette.accent
+                                : AppPalette.textMuted,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            letterSpacing: 0.6,
+                          ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMatchSummaryCard(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _cardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _cardBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.12),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: Image.network(
+              _stadiumImg,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                color: _cardBorder,
+                alignment: Alignment.center,
+                child: const Icon(Icons.image_not_supported_outlined,
+                    color: AppPalette.textMuted),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: AppPalette.live,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'MATCH RESULT',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: AppPalette.textMuted,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.2,
+                          ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Australia won by 6 wickets',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: AppPalette.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                      ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Australia chased down 241 runs in 43 overs.\n'
+                  'Travis Head scored a brilliant 137 off 120 balls\n'
+                  'to secure the title for Australia.',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppPalette.textMuted,
+                        height: 1.5,
+                      ),
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  height: 40,
+                  child: FilledButton(
+                    onPressed: () {},
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppPalette.bgSecondary,
+                      foregroundColor: AppPalette.textPrimary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: const Text(
+                      'View Full Scorecard',
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVenueDetailsCard(BuildContext context) {
+    Widget row(String label, String value, {bool last = false}) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: last ? Colors.transparent : _cardBorder,
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppPalette.textMuted,
+                    ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                value,
+                textAlign: TextAlign.right,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppPalette.textPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(21),
+      decoration: BoxDecoration(
+        color: _cardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _cardBorder),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.stadium_outlined,
+                  size: 20, color: AppPalette.textPrimary),
+              const SizedBox(width: 8),
+              Text(
+                'Venue Details',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppPalette.textPrimary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          row('Venue', 'Narendra Modi Stadium'),
+          row('City', 'Ahmedabad, India'),
+          row('Capacity', '132,000'),
+          row('Ends', 'Adani Exhibition End, Reliance End', last: true),
+          const SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: SizedBox(
+              height: 128,
+              width: double.infinity,
+              child: Image.network(
+                _mapImg,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: _cardBorder,
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.map_outlined, color: AppPalette.textMuted),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWeatherPitchRow(BuildContext context) {
+    Widget card({
+      required Widget leadingIcon,
+      required String title,
+      required Widget body,
+    }) {
+      return Expanded(
+        child: Container(
+          height: 157,
+          padding: const EdgeInsets.all(21),
+          decoration: BoxDecoration(
+            color: _cardBg,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: _cardBorder),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  leadingIcon,
+                  const SizedBox(width: 8),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: AppPalette.textPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Expanded(child: body),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        card(
+          leadingIcon:
+              const Icon(Icons.cloud_outlined, color: AppPalette.textPrimary, size: 20),
+          title: 'Weather',
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '32°C',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: AppPalette.textPrimary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 30,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Haze & Sunny',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppPalette.textMuted,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.water_drop_outlined,
+                      size: 14, color: AppPalette.textMuted),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Humidity: 42%',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: AppPalette.textMuted,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        card(
+          leadingIcon:
+              const Icon(Icons.sports_cricket_outlined, color: AppPalette.textPrimary, size: 20),
+          title: 'Pitch',
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Balanced',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppPalette.textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Spin friendly',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppPalette.textMuted,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: SizedBox(
+                  height: 6,
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 40,
+                        child: Container(color: AppPalette.progress),
+                      ),
+                      Expanded(
+                        flex: 60,
+                        child: Container(color: Color(0xFFF97316)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Pace 40%',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: AppPalette.textMuted,
+                        ),
+                  ),
+                  Text(
+                    'Spin 60%',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: AppPalette.textMuted,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeadToHeadCard(BuildContext context) {
+    Widget flagCircle(String url) {
+      return Container(
+        width: 64,
+        height: 64,
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          shape: BoxShape.circle,
+          border: Border.all(color: const Color(0x33111F43), width: 2),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0x33111F43), width: 2),
+          ),
+          padding: const EdgeInsets.all(10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: Image.network(
+              url,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const Icon(Icons.flag_outlined,
+                  color: AppPalette.textMuted, size: 20),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget stat(String label, String value) {
+      return Column(
+        children: [
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppPalette.textSubtle,
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppPalette.textPrimary,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+        ],
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(21),
+      decoration: BoxDecoration(
+        color: _cardBg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _cardBorder),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.compare_arrows_outlined,
+                      size: 20, color: AppPalette.textPrimary),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Head-to-Head',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppPalette.textPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                  ),
+                ],
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _cardBorder,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'LAST 10 MATCHES',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: const Color(0xFFCBD5E1),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 10,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    flagCircle(_indFlag),
+                    const SizedBox(height: 8),
+                    Text(
+                      'IND',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: AppPalette.textPrimary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '4',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: const Color(0xFF60A5FA),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  Container(width: 1, height: 40, color: _cardBorder),
+                  const SizedBox(height: 8),
+                  Text(
+                    'VS',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppPalette.textMuted,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(width: 1, height: 40, color: _cardBorder),
+                ],
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    flagCircle(_ausFlag),
+                    const SizedBox(height: 8),
+                    Text(
+                      'AUS',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: AppPalette.textPrimary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '6',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: const Color(0xFF60A5FA),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 22),
+          Container(height: 1, color: _cardBorder),
+          const SizedBox(height: 18),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'TOSS HISTORY AT VENUE',
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppPalette.textMuted,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.6,
+                  ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0x801E293B),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                stat('Opt to Bat', '40%'),
+                stat('Win Batting 1st', '35%'),
+                stat('Avg 1st Inn Score', '247'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

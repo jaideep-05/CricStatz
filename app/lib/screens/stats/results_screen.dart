@@ -121,8 +121,9 @@ class ResultsScreen extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.calendar_today_outlined,
-                            color: AppPalette.textPrimary, size: 20),
+                        icon: Image.asset(AppAssets.iconCal,
+                            width: 20, height: 20,
+                            color: AppPalette.textPrimary),
                         padding: EdgeInsets.zero,
                         style: IconButton.styleFrom(
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -139,8 +140,9 @@ class ResultsScreen extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.filter_list,
-                            color: AppPalette.textPrimary, size: 20),
+                        icon: Image.asset(AppAssets.iconFil,
+                            width: 20, height: 20,
+                            color: AppPalette.textPrimary),
                         padding: EdgeInsets.zero,
                         style: IconButton.styleFrom(
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -382,7 +384,9 @@ class _ResultCard extends StatelessWidget {
                   ),
                 ),
                 FilledButton(
-                  onPressed: () {},
+                  onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Scoreboard coming soon')),
+                  ),
                   style: FilledButton.styleFrom(
                     backgroundColor: AppPalette.bgSecondary,
                     foregroundColor: AppPalette.textPrimary,
@@ -394,6 +398,7 @@ class _ResultCard extends StatelessWidget {
                   child: Text(
                     'View Scorecard',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Colors.white,
                           fontWeight: FontWeight.w700,
                           fontSize: 12,
                         ),

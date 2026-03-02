@@ -1,0 +1,639 @@
+import 'dart:ui';
+
+import 'package:cricstatz/config/palette.dart';
+import 'package:cricstatz/config/routes.dart';
+import 'package:flutter/material.dart';
+
+const Color _playersBg = Color(0xFF070D19);
+const Color _playersStroke = Color(0xFF1E293B);
+const Color _playersSegBg = Color(0xFF1E293B);
+
+class MatchPlayersScreen extends StatefulWidget {
+  const MatchPlayersScreen({super.key});
+
+  @override
+  State<MatchPlayersScreen> createState() => _MatchPlayersScreenState();
+}
+
+class _MatchPlayersScreenState extends State<MatchPlayersScreen> {
+  bool _isIndiaSelected = true;
+
+  // Figma (142:2940) image assets (valid for limited time).
+  static const _imgRohit =
+      'https://www.figma.com/api/mcp/asset/e124ba8f-b061-4c32-b980-5723e81fc373';
+  static const _imgRahul =
+      'https://www.figma.com/api/mcp/asset/b8551dcd-78b5-4a9b-8c49-8baf8b7e1437';
+  static const _imgKohli =
+      'https://www.figma.com/api/mcp/asset/aeaf0171-6bf1-44e4-a3b2-cb1695587eed';
+  static const _imgShami =
+      'https://www.figma.com/api/mcp/asset/6b6a41ce-135e-4546-bf44-7002e0c8fd75';
+  static const _imgBumrah =
+      'https://www.figma.com/api/mcp/asset/9f365f95-63c7-4add-9d81-e9713fb207d0';
+  static const _imgIshan =
+      'https://www.figma.com/api/mcp/asset/979a5c18-a907-40c9-bc96-e873df8c47cd';
+  static const _imgAshwin =
+      'https://www.figma.com/api/mcp/asset/108bd2d1-159a-4127-b28d-212bef3826c8';
+  static const _imgPrasidh =
+      'https://www.figma.com/api/mcp/asset/9a6d3c27-3c1e-410a-807c-5491c95bc322';
+
+  static const Color _bg = _playersBg;
+  static const Color _segBg = _playersSegBg;
+  static const Color _segSelected = AppPalette.bgSecondary; // #0A1F43
+  static const Color _segUnselectedText = AppPalette.textMuted;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: _bg,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildTopBar(context),
+            _buildTabs(context),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    _buildTeamSelector(context),
+                    const SizedBox(height: 16),
+                    _buildPlayingXIHeader(context),
+                    _buildPlayersList(context),
+                    const SizedBox(height: 24),
+                    _buildBenchSection(context),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopBar(BuildContext context) {
+    // Match the same navbar style as `scoreboard.dart`.
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: Container(
+          height: 72,
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          decoration: const BoxDecoration(
+            color: Color(0xF20A1F43),
+            border: Border(bottom: BorderSide(color: Color(0x1AFFFFFF))),
+          ),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back_ios_new,
+                    color: AppPalette.textPrimary, size: 20),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'IND vs AUS, Final',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppPalette.textPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'ODI World Cup 2023',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFFCBD5E1),
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.share_outlined,
+                    color: AppPalette.textPrimary, size: 20),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabs(BuildContext context) {
+    const tabs = ['INFO', 'LIVE', 'SCORECARD', 'PLAYERS'];
+    const selectedIndex = 3;
+
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: Container(
+          height: 51,
+          decoration: const BoxDecoration(
+            color: Color(0xF20A1F43),
+            border: Border(bottom: BorderSide(color: Color(0x1AFFFFFF))),
+          ),
+          child: Row(
+            children: List.generate(tabs.length, (i) {
+              final isSelected = i == selectedIndex;
+              return Expanded(
+                child: InkWell(
+                  onTap: () {
+                    if (i == 0) {
+                      Navigator.pushNamed(context, AppRoutes.info);
+                    } else if (i == 2) {
+                      Navigator.pushNamed(context, AppRoutes.scoreboard);
+                    }
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color:
+                              isSelected ? AppPalette.accent : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Text(
+                      tabs[i],
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: isSelected
+                                ? AppPalette.accent
+                                : AppPalette.textMuted,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            letterSpacing: 0.6,
+                          ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTeamSelector(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        height: 44,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: _segBg,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: _segButton(
+                context,
+                label: 'INDIA',
+                selected: _isIndiaSelected,
+                onTap: () => setState(() => _isIndiaSelected = true),
+              ),
+            ),
+            Expanded(
+              child: _segButton(
+                context,
+                label: 'AUSTRALIA',
+                selected: !_isIndiaSelected,
+                onTap: () => setState(() => _isIndiaSelected = false),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _segButton(
+    BuildContext context, {
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        height: double.infinity,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: selected ? _segSelected : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: selected
+              ? const [
+                  BoxShadow(
+                    color: Color(0x0D000000),
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                  )
+                ]
+              : null,
+        ),
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: selected ? Colors.white : _segUnselectedText,
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+              ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPlayingXIHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Playing XI',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppPalette.textPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: _segBg,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              '11 PLAYERS',
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: AppPalette.textSubtle,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlayersList(BuildContext context) {
+    final players = _isIndiaSelected
+        ? const [
+            _PlayerRowData(
+              name: 'Rohit\nSharma',
+              role: 'Top-order Batter',
+              stat: '47 (31)',
+              subStat: 'S/R: 151.6',
+              badge: 'C',
+              badgeBg: Color(0xFFFACC15),
+              badgeFg: AppPalette.bgSecondary,
+              imageUrl: _imgRohit,
+            ),
+            _PlayerRowData(
+              name: 'KL Rahul',
+              role: 'Wicketkeeper Batter',
+              stat: '66 (107)',
+              subStat: 'S/R: 61.7',
+              badge: 'WK',
+              badgeBg: Color(0xFF475569),
+              badgeFg: Colors.white,
+              imageUrl: _imgRahul,
+            ),
+            _PlayerRowData(
+              name: 'Virat Kohli',
+              role: 'Middle-order Batter',
+              stat: '54 (63)',
+              subStat: 'S/R: 85.7',
+              badge: 'VC',
+              badgeBg: AppPalette.bgSecondary,
+              badgeFg: Colors.white,
+              imageUrl: _imgKohli,
+            ),
+            _PlayerRowData(
+              name: 'Mohammed Shami',
+              role: 'Right-arm Fast',
+              stat: '1/47 (7.0)',
+              subStat: 'ECON: 6.71',
+              badge: null,
+              imageUrl: _imgShami,
+            ),
+            _PlayerRowData(
+              name: 'Jasprit Bumrah',
+              role: 'Right-arm Fast',
+              stat: '2/43 (9.0)',
+              subStat: 'ECON: 4.78',
+              badge: null,
+              imageUrl: _imgBumrah,
+            ),
+          ]
+        : const [
+            _PlayerRowData(
+              name: 'Travis Head',
+              role: 'Top-order Batter',
+              stat: '137 (120)',
+              subStat: 'S/R: 114.1',
+              badge: 'C',
+              badgeBg: Color(0xFFFACC15),
+              badgeFg: AppPalette.bgSecondary,
+              imageUrl: _imgRohit,
+            ),
+          ];
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Column(
+        children: List.generate(players.length, (i) {
+          return Column(
+            children: [
+              _PlayerRow(data: players[i]),
+              if (i != players.length - 1)
+                const Divider(height: 1, color: _playersStroke),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildBenchSection(BuildContext context) {
+    final bench = const [
+      _BenchRowData(
+        name: 'Ishan Kishan',
+        role: 'Wicketkeeper Batter',
+        imageUrl: _imgIshan,
+      ),
+      _BenchRowData(
+        name: 'Ravichandran Ashwin',
+        role: 'Bowling All-rounder',
+        imageUrl: _imgAshwin,
+      ),
+      _BenchRowData(
+        name: 'Prasidh Krishna',
+        role: 'Right-arm Fast',
+        imageUrl: _imgPrasidh,
+      ),
+    ];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 48),
+      decoration: const BoxDecoration(
+        color: Color(0x660F172A),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Bench Players',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppPalette.textPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
+          ),
+          const SizedBox(height: 12),
+          ...bench.map((b) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: _BenchRow(data: b),
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlayerRowData {
+  final String name;
+  final String role;
+  final String stat;
+  final String subStat;
+  final String? badge;
+  final Color badgeBg;
+  final Color badgeFg;
+  final String imageUrl;
+
+  const _PlayerRowData({
+    required this.name,
+    required this.role,
+    required this.stat,
+    required this.subStat,
+    required this.badge,
+    this.badgeBg = const Color(0x00000000),
+    this.badgeFg = Colors.white,
+    required this.imageUrl,
+  });
+}
+
+class _PlayerRow extends StatelessWidget {
+  const _PlayerRow({required this.data});
+
+  final _PlayerRowData data;
+
+  static const _avatarBorder = Color(0x33111F43);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: _avatarBorder, width: 2),
+                    ),
+                    child: ClipOval(
+                      child: Image.network(
+                        data.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          color: _playersStroke,
+                          alignment: Alignment.center,
+                          child: const Icon(Icons.person,
+                              color: AppPalette.textMuted),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (data.badge != null)
+                    Positioned(
+                      right: -4,
+                      bottom: -4,
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: data.badgeBg,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: _playersBg, width: 2),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          data.badge!,
+                          style: TextStyle(
+                            color: data.badgeFg,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.name,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: AppPalette.textPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          height: 1.1,
+                        ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    data.role,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppPalette.textMuted,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                data.stat,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppPalette.accent,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                    ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                data.subStat,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppPalette.textMuted,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 10,
+                      letterSpacing: -0.5,
+                    ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BenchRowData {
+  final String name;
+  final String role;
+  final String imageUrl;
+
+  const _BenchRowData({
+    required this.name,
+    required this.role,
+    required this.imageUrl,
+  });
+}
+
+class _BenchRow extends StatelessWidget {
+  const _BenchRow({required this.data});
+
+  final _BenchRowData data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 13),
+      decoration: BoxDecoration(
+        color: _playersSegBg,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0x80334155)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            padding: const EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF334155)),
+            ),
+            child: ClipOval(
+              child: Image.network(
+                data.imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: _playersStroke,
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.person, color: AppPalette.textMuted),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data.name,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppPalette.textPrimary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                data.role,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppPalette.textMuted,
+                      fontSize: 11,
+                    ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+

@@ -37,65 +37,72 @@ class _HomeScreenState extends State<HomeScreen> {
                 snap: true,
                 pinned: false,
                 automaticallyImplyLeading: false,
-                toolbarHeight: 111, // AppHeader (55) + QuickTabs (51) + buffer to avoid overflow
+                toolbarHeight:
+                    111, // AppHeader (55) + QuickTabs (51) + buffer to avoid overflow
                 backgroundColor: Colors.transparent,
                 surfaceTintColor: Colors.transparent,
                 flexibleSpace: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xCC111721),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                                  AppHeader(
-                                    trailing: Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        Container(
-                                          width: 40,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: AppPalette.bgSecondary.withValues(alpha: 0.3),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: const Icon(Icons.notifications_none, color: AppPalette.textPrimary),
-                                        ),
-                                        Positioned(
-                                          right: 8,
-                                          top: 8,
-                                          child: Container(
-                                            width: 8,
-                                            height: 8,
-                                            decoration: BoxDecoration(
-                                              color: AppPalette.live,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(color: AppPalette.bgPrimary, width: 2),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xCC111721),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          AppHeader(
+                            trailing: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppPalette.bgSecondary
+                                        .withValues(alpha: 0.3),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(Icons.notifications_none,
+                                      color: AppPalette.textPrimary),
+                                ),
+                                Positioned(
+                                  right: 8,
+                                  top: 8,
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color: AppPalette.live,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: AppPalette.bgPrimary,
+                                          width: 2),
                                     ),
                                   ),
-                                  _QuickTabs(
-                                    selectedIndex: _selectedTab,
-                                    onTap: (int index) {
-                                      setState(() => _selectedTab = index);
-                                      if (index == 1) {
-                                        Navigator.push(context, AppRoutes.buildUpcomingRoute());
-                                      } else if (index == 2) {
-                                        Navigator.push(context, AppRoutes.buildResultsRoute());
-                                      }
-                                    },
-                                  ),
-                                ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          _QuickTabs(
+                            selectedIndex: _selectedTab,
+                            onTap: (int index) {
+                              setState(() => _selectedTab = index);
+                              if (index == 1) {
+                                Navigator.push(
+                                    context, AppRoutes.buildUpcomingRoute());
+                              } else if (index == 2) {
+                                Navigator.push(
+                                    context, AppRoutes.buildResultsRoute());
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
+                  ),
                 ),
+              ),
               SliverPadding(
                 padding: const EdgeInsets.all(16),
                 sliver: SliverList(
@@ -330,7 +337,9 @@ class _LiveMatchSection extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () => Navigator.pushNamed(context, AppRoutes.toss),
+                  onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Scoreboard coming soon')),
+                  ),
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFF1F5F9),
                     foregroundColor: AppPalette.bgSecondary,
@@ -488,7 +497,8 @@ class _UpcomingMatchesSection extends StatelessWidget {
             ),
             const Spacer(),
             TextButton(
-              onPressed: () => Navigator.push(context, AppRoutes.buildUpcomingRoute()),
+              onPressed: () =>
+                  Navigator.push(context, AppRoutes.buildUpcomingRoute()),
               child: const Text('View All'),
             ),
           ],
@@ -505,7 +515,8 @@ class _UpcomingMatchesSection extends StatelessWidget {
                 teamAFlag: AppAssets.flagEng,
                 teamBFlag: AppAssets.flagRsa,
                 subtitle: 'ODI Series • Lords, London',
-                onTap: () => Navigator.push(context, AppRoutes.buildUpcomingRoute()),
+                onTap: () =>
+                    Navigator.push(context, AppRoutes.buildUpcomingRoute()),
               ),
               const SizedBox(width: 16),
               _UpcomingCard(
@@ -515,7 +526,8 @@ class _UpcomingMatchesSection extends StatelessWidget {
                 teamAFlag: AppAssets.flagNzl,
                 teamBFlag: AppAssets.flagPak,
                 subtitle: 'T20 International • Auckland',
-                onTap: () => Navigator.push(context, AppRoutes.buildUpcomingRoute()),
+                onTap: () =>
+                    Navigator.push(context, AppRoutes.buildUpcomingRoute()),
               ),
             ],
           ),
@@ -549,69 +561,69 @@ class _UpcomingCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-      width: 240,
-      padding: const EdgeInsets.all(13),
-      decoration: BoxDecoration(
-        color: AppPalette.cardOverlay.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppPalette.cardStroke),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            time,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppPalette.textMuted,
-                  fontWeight: FontWeight.w700,
+        width: 240,
+        padding: const EdgeInsets.all(13),
+        decoration: BoxDecoration(
+          color: AppPalette.cardOverlay.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppPalette.cardStroke),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              time,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: AppPalette.textMuted,
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _FlagCircle(assetPath: teamAFlag),
+                    const SizedBox(width: 8),
+                    Text(
+                      teamA,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppPalette.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ],
                 ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _FlagCircle(assetPath: teamAFlag),
-                  const SizedBox(width: 8),
-                  Text(
-                    teamA,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppPalette.textPrimary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                ],
-              ),
-              Text('vs',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: AppPalette.textMuted)),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    teamB,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppPalette.textPrimary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  const SizedBox(width: 8),
-                  _FlagCircle(assetPath: teamBFlag),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(subtitle,
-              style:
-                  const TextStyle(color: AppPalette.textSubtle, fontSize: 11)),
-        ],
+                Text('vs',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: AppPalette.textMuted)),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      teamB,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppPalette.textPrimary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                    const SizedBox(width: 8),
+                    _FlagCircle(assetPath: teamBFlag),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(subtitle,
+                style: const TextStyle(
+                    color: AppPalette.textSubtle, fontSize: 11)),
+          ],
+        ),
       ),
-    ),
     );
   }
 }
