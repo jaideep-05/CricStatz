@@ -67,6 +67,15 @@ class ProfileService {
     return (data as List).map((e) => Profile.fromJson(e)).toList();
   }
 
+  static Future<List<Profile>> getAllProfiles() async {
+    final data = await SupabaseService.client
+        .from('profiles')
+        .select()
+        .order('display_name', ascending: true);
+        
+    return (data as List).map((e) => Profile.fromJson(e)).toList();
+  }
+
   static Future<Profile?> findByInviteCode(String code) async {
     final data = await SupabaseService.client
         .from('profiles')

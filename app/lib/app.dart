@@ -28,7 +28,7 @@ class CricStatzApp extends StatelessWidget {
             title: 'CricStatz',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
-            routes: AppRoutes.routeTable,
+            onGenerateRoute: AppRoutes.onGenerateRoute,
             home: _buildHome(auth),
           );
         },
