@@ -7,6 +7,7 @@ import 'package:cricstatz/providers/team_provider.dart';
 import 'package:cricstatz/screens/auth/login_screen.dart';
 import 'package:cricstatz/screens/auth/profile_setup_screen.dart';
 import 'package:cricstatz/screens/home/home_screen.dart';
+import 'package:cricstatz/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +57,7 @@ class _AuthGateState extends State<_AuthGate> {
                     ? 'noProfile'
                     : 'ready';
 
-        debugPrint('[AuthGate] state=$currentState (was=$_lastState)');
+        AppLogger.debug('state=$currentState (was=$_lastState)', tag: 'AuthGate');
 
         // When the auth phase changes, pop any pushed routes so the new
         // screen is actually visible instead of hidden underneath.

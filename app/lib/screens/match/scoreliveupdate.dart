@@ -4,6 +4,7 @@ import 'package:cricstatz/config/routes.dart';
 import 'package:cricstatz/models/match.dart';
 import 'package:cricstatz/models/match_stats.dart';
 import 'package:cricstatz/services/match_service.dart';
+import 'package:cricstatz/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -94,7 +95,7 @@ class _ScoreLiveUpdateScreenState extends State<ScoreLiveUpdateScreen> {
         bowler: bowler,
       );
     } catch (e) {
-      debugPrint('Error syncing score: $e');
+      AppLogger.error('Error syncing score', tag: 'Scoring', error: e);
     }
   }
 
