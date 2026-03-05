@@ -4,6 +4,13 @@ import 'package:cricstatz/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+String _formatRole(String role) {
+  return role
+      .split('-')
+      .map((w) => '${w[0].toUpperCase()}${w.substring(1)}')
+      .join(' ');
+}
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -113,6 +120,13 @@ class _ProfileBody extends StatelessWidget {
 class _ProfileHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final profile = context.watch<AuthProvider>().profile;
+    final displayName = profile?.displayName ?? 'Player';
+    final role = profile?.role ?? 'batter';
+    final avatarUrl = profile?.avatarUrl;
+    final username = profile?.username ?? '';
+    final inviteCode = profile?.inviteCode ?? '';
+
     return Column(
       children: [
         Container(
@@ -126,58 +140,80 @@ class _ProfileHeaderCard extends StatelessWidget {
             ),
           ),
           child: ClipOval(
-            child: Container(
-              color: AppPalette.cardOverlay,
-              alignment: Alignment.center,
-              child: const Icon(
-                Icons.person_outline,
-                color: AppPalette.textMuted,
-                size: 48,
-              ),
-            ),
+            child: avatarUrl != null && avatarUrl.isNotEmpty
+                ? Image.network(
+                    avatarUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: AppPalette.cardOverlay,
+                      alignment: Alignment.center,
+                      child: Text(
+                        displayName.isNotEmpty ? displayName[0].toUpperCase() : '?',
+                        style: const TextStyle(
+                          color: AppPalette.accent,
+                          fontSize: 48,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    color: AppPalette.cardOverlay,
+                    alignment: Alignment.center,
+                    child: Text(
+                      displayName.isNotEmpty ? displayName[0].toUpperCase() : '?',
+                      style: const TextStyle(
+                        color: AppPalette.accent,
+                        fontSize: 48,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'Alex Johnson',
-          style: TextStyle(
+        Text(
+          displayName,
+          style: const TextStyle(
             color: AppPalette.textPrimary,
             fontSize: 22,
             fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 4),
-        const Text(
-          'All-rounder | Team Mavericks',
-          style: TextStyle(
+        Text(
+          '@$username  •  ${_formatRole(role)}',
+          style: const TextStyle(
             color: AppPalette.textMuted,
             fontSize: 14,
           ),
         ),
-        const SizedBox(height: 6),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: AppPalette.cardOverlay,
-            borderRadius: BorderRadius.circular(999),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.verified, size: 14, color: AppPalette.accent),
-              SizedBox(width: 4),
-              Text(
-                'PRO LEAGUE PLAYER',
-                style: TextStyle(
-                  color: AppPalette.accent,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.8,
+        if (inviteCode.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppPalette.cardOverlay,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.tag, size: 14, color: AppPalette.accent),
+                const SizedBox(width: 4),
+                Text(
+                  inviteCode,
+                  style: const TextStyle(
+                    color: AppPalette.accent,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.8,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+        ],
         const SizedBox(height: 16),
         Row(
           children: [
