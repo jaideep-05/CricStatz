@@ -1,6 +1,5 @@
 ![CricStatz Logo](app/assets/icons/logo.png)
 
-
 CricStatz is an open-source Flutter app to record and track cricket matches played in grounds, local leagues, and practice sessions.
 
 The goal is simple: make scorekeeping fun, reliable, and shareable so everyone can see match and player stats.

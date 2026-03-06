@@ -21,6 +21,8 @@ class Match {
   final int? spinRatio;
   final int? headToHeadA;
   final int? headToHeadB;
+  final List<String>? teamASquad;
+  final List<String>? teamBSquad;
 
   const Match({
     required this.id,
@@ -45,6 +47,8 @@ class Match {
     this.spinRatio,
     this.headToHeadA,
     this.headToHeadB,
+      this.teamASquad,
+      this.teamBSquad,
   });
 
   Map<String, dynamic> toJson() => {
@@ -70,6 +74,8 @@ class Match {
         'spin_ratio': spinRatio,
         'head_to_head_a': headToHeadA,
         'head_to_head_b': headToHeadB,
+        'team_a_squad': teamASquad,
+        'team_b_squad': teamBSquad,
       };
 
   factory Match.fromJson(Map<String, dynamic> json) {
@@ -98,6 +104,12 @@ class Match {
       spinRatio: json['spin_ratio'] as int?,
       headToHeadA: json['head_to_head_a'] as int?,
       headToHeadB: json['head_to_head_b'] as int?,
+      teamASquad: (json['team_a_squad'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
+      teamBSquad: (json['team_b_squad'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
     );
   }
 }

@@ -26,6 +26,8 @@ class ScoringSetupScreen extends StatefulWidget {
   final String format;
   final DateTime? date;
   final int overs;
+  final List<String> teamASquadIds;
+  final List<String> teamBSquadIds;
 
   const ScoringSetupScreen({
     super.key,
@@ -36,6 +38,8 @@ class ScoringSetupScreen extends StatefulWidget {
     required this.format,
     this.date,
     required this.overs,
+    required this.teamASquadIds,
+    required this.teamBSquadIds,
   });
 
   @override

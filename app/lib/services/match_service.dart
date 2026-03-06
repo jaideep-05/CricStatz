@@ -27,6 +27,8 @@ class MatchService {
     String? matchFormat,
     DateTime? matchDate,
     required int oversLimit,
+    List<String>? teamASquad,
+    List<String>? teamBSquad,
   }) async {
     final userId = SupabaseService.currentUser!.id;
     final data = await SupabaseService.client
@@ -40,6 +42,8 @@ class MatchService {
           'overs_limit': oversLimit,
           'status': 'upcoming',
           'created_by': userId,
+          'team_a_squad': teamASquad,
+          'team_b_squad': teamBSquad,
         })
         .select()
         .single();
