@@ -447,6 +447,7 @@ class _BattingTable extends StatelessWidget {
       required String b,
       required String f4,
       required String f6,
+      required String sr,
     }) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -504,6 +505,7 @@ class _BattingTable extends StatelessWidget {
             Expanded(child: _num(context, b, muted: true)),
             Expanded(child: _num(context, f4, muted: true)),
             Expanded(child: _num(context, f6, muted: true)),
+            Expanded(child: _num(context, sr, muted: true)),
           ],
         ),
       );
@@ -533,6 +535,7 @@ class _BattingTable extends StatelessWidget {
                 Expanded(child: headerCell('B')),
                 Expanded(child: headerCell('4S')),
                 Expanded(child: headerCell('6S')),
+                Expanded(child: headerCell('SR')),
               ],
             ),
           ),
@@ -543,6 +546,7 @@ class _BattingTable extends StatelessWidget {
             b: b.balls,
             f4: b.fours.toString(),
             f6: b.sixes.toString(),
+            sr: b.sr,
           )),
         ],
       ),
